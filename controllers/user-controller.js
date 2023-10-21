@@ -1,10 +1,11 @@
 const User = require('../models/User');
 
+
 module.exports = {
     // get all users
     async getAllUsers(req, res) {
         try {
-            const users = await User.find();
+            const users = await User.find().populate("thoughts");
             return res.json(users);
         } catch (err) {
             console.log(err);
@@ -77,7 +78,7 @@ async addFriend(req, res) {
     try {
         const user = await User.findOneAndUpdate(
             { _id: req.params.id },
-            { $addToSet: { friends: req.body.friendId } },
+            { $addToSet: { friends:{_id: req.params.friendId}} },
             { new: true }
         );
         if (!user) {
@@ -90,13 +91,27 @@ async addFriend(req, res) {
     }
 
 },
+// remove friend from user
 
+async removeFriend(req, res) {
+    try {
+        const friend = await User.findOne({ _id: req.params.friendId });
+        console.log(friend);
+        const user = await User.findOneAndUpdate(
+            { _id: req.params.id },
+            { $pull: { friends: { _id: req.params.friendId } } },
+            { new: true },
+        );
+        if (!user) {
+            return res.status(404).json({ message: 'No user found with this id!' });
+        }
+        return res.json(user);
+    } catch (err) {
 
-
-
-
-
-
+        console.log(err);
+        return res.status(400).json(err);
+    }
+}
 
 
 };
