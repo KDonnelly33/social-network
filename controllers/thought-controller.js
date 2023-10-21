@@ -49,6 +49,7 @@ async getSingleThought(req, res) {
 async updateThought(req, res) {
     console.log(req.body);
     try {
+    
         const thought = await Thought.findOneAndUpdate(
             { _id: req.params.id },
             req.body,
@@ -78,5 +79,46 @@ async deleteThought(req, res) {
     }
 },
 
+// create a reaction
 
-};
+async createReaction(req, res) {
+    try {
+        console.log(req.params.id);
+        const thought = await Thought.findOneAndUpdate(
+            { _id: req.params.id },
+            { $addToSet: { reactions: req.body } },
+            { new: true }
+        );
+        console.log(thought);
+        if (!thought) {
+            return res.status(404).json({ message: 'No thought with that ID' });
+        }
+        return res.json(thought);
+    } catch (err) {
+        console.log(err);
+        return res.status(500).json(err);
+    }
+
+},
+// delete a reaction
+async deleteReaction(req, res) {
+    try {
+        const thought = await Thought.findOneAndUpdate(
+            { _id: req.params.id },
+            { $pull: { reactions: { reactionId: req.params.reactionId } } },
+            { new: true }
+        );
+        if (!thought) {
+            return res.status(404).json({ message: 'No thought with that ID' });
+        }
+        return res.json({ message: 'Reaction deleted!' });
+    } catch (err) {
+        console.log(err);
+        return res.status(500).json(err);
+    }
+},
+
+
+
+
+}
