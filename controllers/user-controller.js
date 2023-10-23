@@ -1,4 +1,5 @@
 const User = require('../models/User');
+const Thought = require('../models/Thought');
 
 
 module.exports = {
@@ -8,7 +9,7 @@ module.exports = {
             const users = await User.find().populate("thoughts");
             return res.json(users);
         } catch (err) {
-            console.log(err);
+        
             return res.status(500).json(err);
         }
     },
@@ -19,14 +20,14 @@ async createUser(req, res) {
         const user = await User.create(req.body);
         return res.json(user);
     } catch (err) {
-        console.log(err);
+ 
         return res.status(400).json(err);
     }
 },
-// get single user by _id and populated thought and friend data
+// get single user by _id and populate it through thought and friend data
 async getSingleUser(req, res) {
     try {
-        console.log(req.params.id);
+
         const user = await User.findOne({ _id: req.params.id })
             .select('-__v')
             .populate('friends')
@@ -36,7 +37,7 @@ async getSingleUser(req, res) {
         }
         return res.json(user);
     } catch (err) {
-        console.log(err);
+
         return res.status(400).json(err);
     }
 },
@@ -44,17 +45,17 @@ async getSingleUser(req, res) {
 // delete single user by id and all associated thoughts
 async deleteUser(req, res) {
     try{
-        user = await User.findOneAndRemove({_id: req.params.id});
+      const  user = await User.findOneAndRemove({_id: req.params.id});
         if (!user) {
             return res.status(404).json({ message: 'No user found with this id!' });
         }
-        return res.json({ message: 'User deleted!' });
+        const thought = await Thought.deleteMany({username: user.username});
+        return res.json(thought);
     } catch (err) {
-        console.log(err);
+
         return res.status(400).json(err);
     }
 },
-
 
 
 
@@ -72,7 +73,7 @@ async editUser(req, res) {
         }
         return res.json(user);
     } catch (err) {
-        console.log(err);
+    
         return res.status(400).json(err);
     }
 },
@@ -81,7 +82,7 @@ async editUser(req, res) {
 
 async addFriend(req, res) {
     console.log('you are adding a friend');
-    console.log(req.body);
+
     try {
         const user = await User.findOneAndUpdate(
             { _id: req.params.id },
