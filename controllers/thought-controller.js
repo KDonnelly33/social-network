@@ -21,7 +21,7 @@ async getAllThoughts(req, res) {
         const thoughts = await Thought.find();
         return res.json(thoughts);
     } catch (err) {
-        console.log(err);
+
         return res.status(500).json(err);
     }
 },
@@ -39,7 +39,7 @@ async getSingleThought(req, res) {
 
         res.json(thought);
     } catch (err) {
-        console.log(err);
+    
         return res.status(500).json(err);
     }
 },
@@ -60,7 +60,7 @@ async updateThought(req, res) {
         }
         return res.json(thought);
     } catch (err) {
-        console.log(err);
+   
         return res.status(500).json(err);
     }
 },
@@ -74,7 +74,7 @@ async deleteThought(req, res) {
         }
         return res.json({ message: 'Thought deleted!' });
     } catch (err) {
-        console.log(err);
+
         return res.status(500).json(err);
     }
 },
@@ -95,7 +95,7 @@ async createReaction(req, res) {
         }
         return res.json(thought);
     } catch (err) {
-        console.log(err);
+
         return res.status(500).json(err);
     }
 
@@ -113,7 +113,7 @@ async deleteReaction(req, res) {
         }
         return res.json({ message: 'Reaction deleted!' });
     } catch (err) {
-        console.log(err);
+
         return res.status(500).json(err);
     }
 },

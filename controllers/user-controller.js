@@ -41,19 +41,26 @@ async getSingleUser(req, res) {
     }
 },
 
-// delete single user by id 
+// delete single user by id and all associated thoughts
 async deleteUser(req, res) {
-    try {
-  user = await User.findOneAndRemove({ _id: req.params.id });
-if (!user) {
-    return res.status(404).json({ message: 'No user found with this id!' });
-}
-  return res.json({ message: 'User deleted!' });
-} catch (err) {
-console.log(err);
-return res.status(400).json(err);
-}
+    try{
+        user = await User.findOneAndRemove({_id: req.params.id});
+        if (!user) {
+            return res.status(404).json({ message: 'No user found with this id!' });
+        }
+        return res.json({ message: 'User deleted!' });
+    } catch (err) {
+        console.log(err);
+        return res.status(400).json(err);
+    }
 },
+
+
+
+
+
+
+
 
 // update user by id
 
@@ -95,11 +102,9 @@ async addFriend(req, res) {
 
 async removeFriend(req, res) {
     try {
-        const friend = await User.findOne({ _id: req.params.friendId });
-        console.log(friend);
         const user = await User.findOneAndUpdate(
             { _id: req.params.id },
-            { $pull: { friends: { _id: req.params.friendId } } },
+            { $pull: { friends: req.params.friendId } },
             { new: true },
         );
         if (!user) {
