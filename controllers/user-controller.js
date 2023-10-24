@@ -82,11 +82,11 @@ async editUser(req, res) {
 
 async addFriend(req, res) {
     console.log('you are adding a friend');
-
+    console.log(req.body);
     try {
         const user = await User.findOneAndUpdate(
             { _id: req.params.id },
-            { $addToSet: { friends:{_id: req.params.friendId}} },
+            { $addToSet: { friends: req.body.friendId } },
             { new: true }
         );
         if (!user) {
